@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body onload="generateBoard();" style="margin: 0px;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+
+
+
+.prevent-select {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+#startButton{
+
+border-radius: 15px;
+background-color: #04AA6d;
+box-shadow: 0 7px #06764b;
+color: #fff;
+font-size: 30px;
+display: block;
+}
+#startButton:hover{background-color: #3e8e41}
+#startButton:active{
+
+background-color: #3e8e41;
+box-shadow: 0 5px #066c45;
+transform:translateY(4px);
+
+}
+
+
+
+@font-face {
+    font-family: "pixelated";
+    src: url('arcade_classic.ttf');
+}
+
+.hover{background-color: #ffffff;}
+.hover:hover{background-color: #bebebe;}
+
+#modal{display: none;}
+
+</style>
+
+
+
+
+
+
+
+<div id="matrix" style="margin: auto; width: 720px; height: 720px;" class="prevent-select">
+
+    <div id="information_bar">
+        <button id="mineCount" style="width: 60px; height: 60px; border-radius: 5px; position: relative; left: 3%; background-color: #000000; color: #00e5ff; font-size: 30px; top: -15px; font-family: pixelated;">∞</button>               <button id="startButton/endButton" style="width: 60px; height: 60px; border-radius: 5px; position: relative; left: 37%; top: 5px;" onclick="document.getElementById('modal').style.display='block';"><img id="button_icon" src="images/StartButton_icon.png" style="width: auto; height: 100%; transform: translateX(-4px);"></button>           <button id="gameTime" style="width: 60px; height: 60px; border-radius: 5px; position: relative; left: 70%; background-color: #000000; color: #00e5ff; font-size: 30px; top: -15px; font-family: pixelated;">0.0</button>
+    </div>
+
+    
+
+</div>
+
+<div id="modal" style="background-color: rgba(0,0,0, 0.4); height: 100%; width: 100%; z-index: 10; overflow: auto; position: fixed; top: 0;">
+
+    <div id="alert_box" style="height: 100px; width: 400px; background-color: #ffffff; border-radius: 5px;position: relative; border: 3px solid black; margin: auto; top: 100px;">
+        <p style="text-align: center; font-size: 20px; font-weight: bold;">Are you sure you want to start a new game?</p>
+        <button style="position: relative; left: 0px; bottom: 1px; width: 50%; height: 40px; border-bottom-left-radius: 5px; border-width: 2px; font-size: 20px;" class="hover" onclick="reset_game(); document.getElementById('modal').style.display='none';">Yes</button>
+        <button style="position: relative; right: -200px; bottom: 41px; width: 50%; height: 40px; border-bottom-right-radius: 5px; border-width: 2px; font-size: 20px; z-index: 2;" class="hover" onclick="document.getElementById('modal').style.display='none';">Cancel</button>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+
+var board=[
+
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]                    
+
+]
+
+//Intitalising the game board
+
+window.gameStarted=false;
+window.gameOver=false;
+window.totalMineCount=0;
+window.gameTimer=0;
+window.timerCoroutine;
+window.minesUnflagged=0;
+
+board_colour="#fcefa9";
+
+row_count=board.length;
+item_count=board[0].length;
+
+square_number=1
+
+for(let i=0; i<row_count; i++) {
+
+    for(let j=0; j<item_count; j++){
+
+        var newButton=document.createElement('button');
+        newButton.textContent="I";
+        newButton.style.color=board_colour;
+
+        //Formatiing the button styles
+        newButton.style.borderWidth="1px";
+        newButton.style.height="40px";
+        newButton.style.width="40px";
+        newButton.style.backgroundColor=board_colour;
+        newButton.style.backgroundImage="url('images/Transparent.png')";
+        newButton.style.backgroundSize="37px 37px";
+
+        newButton.id="button_"+square_number.toString();
+       // document.getElementById(newButton.id).addEventListener("dblclick", console.log(1));
+        
+
+
+        matrix.appendChild(newButton);
+        square_number+=1;
+    }
+    matrix.appendChild(document.createElement("br"));
+}
+matrix.appendChild(document.createElement("br"));
+matrix.appendChild(document.createElement("br"));
+
+var btns=document.getElementById("matrix").querySelectorAll("button");
+let timer=0;
+let interval;
+let button_flagged=false;
+
+for(i of btns) {
+
+    //Adding an event listener to all of the buttons in the matrix
+
+    i.addEventListener("mousedown", function() {
+
+        if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
+
+        timer=new Date().getTime();
+
+        var buttonID=this.id;
+        var str1=buttonID.split("_");
+
+        if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+            button_flagged=false;
+            interval=setInterval(held_click, 500, buttonID, str1);
+        }
+    });
+
+
+
+
+
+    i.addEventListener("mouseup", function() {
+
+        clearInterval(interval);
+        var current_time=new Date().getTime();
+
+
+        /*
+        if(current_time-timer>1000) {
+            var buttonID=this.id;
+            var str1=buttonID.split("_");
+
+            if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                var numberOfButton=parseInt(str1[1]);
+                flagControl(numberOfButton);
+                button_flagged=true;
+            }
+        }
+        */
+        if(current_time-timer<500) {
+
+            var buttonID=this.id;
+            var str1=buttonID.split("_");
+
+            if(str1!=buttonID) {
+
+                var numberOfButton=parseInt(str1[1]);
+
+                var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
+                var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
+                
+                if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
+                    
+                    reveal_squares(numberOfButton); 
+                }
+                else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
+                    
+                    reveal_any_square(buttonID, row_index, item_index_in_row);
+                }
+            }        
+        }
+    });
+
+
+
+
+
+    i.addEventListener("touchstart", function() {
+
+        if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
+
+        timer=new Date().getTime();
+
+        var buttonID=this.id;
+        var str1=buttonID.split("_");
+
+        if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+            button_flagged=false;
+            interval=setInterval(held_click, 500, buttonID, str1);
+        }
+    });
+
+
+
+    
+
+    i.addEventListener("touchend", function() {
+        clearInterval(interval);
+        var current_time=new Date().getTime();
+
+    
+        /*
+        if(current_time-timer>1000) {
+            var buttonID=this.id;
+            var str1=buttonID.split("_");
+
+            if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                var numberOfButton=parseInt(str1[1]);
+                flagControl(numberOfButton);
+                button_flagged=true;
+            }
+        }
+        */
+        if(current_time-timer<500) {
+
+            var buttonID=this.id;
+            var str1=buttonID.split("_");
+
+            if(str1!=buttonID) {
+
+                var numberOfButton=parseInt(str1[1]);
+                var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
+                var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
+            
+                if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
+                    
+                    reveal_squares(numberOfButton); 
+                }
+                else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
+                    
+                    reveal_any_square(buttonID, row_index, item_index_in_row);
+                }
+            }        
+        }
+    });
+}
+
+
+function held_click(buttonID, str1) {
+
+    var numberOfButton=parseInt(str1[1]);
+    flagControl(numberOfButton);
+    button_flagged=true;
+    clearInterval(interval);
+}
+
+
+
+
+function flagControl(button) {
+
+    var row_index=(Math.ceil(((button)/item_count)))-1//Retrieving the index of the row
+    var item_index_in_row=(button)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+    button_ref=document.getElementById("button_"+button.toString()).style;
+
+    if(button_ref.backgroundImage=='url("images/Transparent.png")') {button_ref.backgroundImage='url("images/Flag.png")'; button_ref.color='rgba(0, 0, 0, 0)'; minesUnflagged-=1;}
+    else if(button_ref.backgroundImage=='url("images/Flag.png")') {button_ref.backgroundImage='url("images/Transparent.png")'; button_ref.color=board_colour; minesUnflagged+=1;}
+    document.getElementById("mineCount").innerHTML=minesUnflagged.toString();
+
+}
+
+
+function startTimer() {
+
+    gameTimer+=0.1;
+    gameTimer=Math.round(gameTimer*10)/10;
+    var gameTimer_str=gameTimer.toString();
+    //Ensuring that whole numbers are written as 5.0 instead of 5
+    if(gameTimer%1==0) {
+        gameTimer_str=gameTimer_str+".0";
+    }
+    if(document.getElementById("gameTime").style.width!="70px" && gameTimer>9.9 && gameTimer<99.9) {
+        document.getElementById("gameTime").style.width="70px";
+    }
+    else if(document.getElementById("gameTime").style.width!="90px" && gameTimer>99.9 && gameTimer<999.9) {
+        document.getElementById("gameTime").style.width="90px";
+    }
+    else if(document.getElementById("gameTime").style.width!="105px" && gameTimer>999.9) {
+        document.getElementById("gameTime").style.width="105px";
+    }
+
+    document.getElementById("gameTime").innerHTML=gameTimer_str;
+}
+
+
+
+/*
+0,0,M,0,0,0,M,0,0,0,0,0,0,M,0,0,M,0,
+0,0,0,0,M,0,M,0,M,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,M,M,0,0,0,0,0,0,0,0,0,0,0,
+M,M,0,0,M,0,0,0,M,0,M,0,0,M,0,M,0,0,
+M,0,M,0,0,M,0,0,0,0,0,0,0,M,0,0,M,0,
+M,0,0,0,0,0,0,0,0,0,0,0,0,M,0,0,0,0,
+0,0,M,0,0,M,0,0,M,0,0,0,0,0,0,M,0,0,
+0,0,0,M,M,0,M,0,0,M,M,0,0,0,0,M,0,0,
+0,0,0,M,0,0,0,0,0,0,0,0,0,M,0,0,M,0,
+0,0,0,0,0,M,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,M,0,0,0,M,0,0,M,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,M,0,0,0,0,0,
+M,M,0,M,M,0,M,0,0,0,M,0,M,0,0,0,0,0,
+0,M,0,0,0,0,0,M,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,M,0,
+M,0,0,0,0,M,0,M,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,M,0,0,0,M,0,0,0,0,M,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+*/
+
+function generateBoard() {
+
+
+    //Generating the mines
+    var number_of_squares=row_count*item_count;//Calculating total squares on the board
+    var mine_number=(row_count*item_count)*0.2063;//Determining the number of mines to be placed on the board - original mine count for 18 by 18 board: 40
+    mine_number=Math.floor(mine_number);
+    totalMineCount=mine_number;
+    minesUnflagged=mine_number;
+
+    document.getElementById("mineCount").innerHTML=minesUnflagged.toString();
+
+    for(let i=0; i<mine_number; i++) {
+        //console.log(i);
+        var random_row=Math.floor(Math.random()*(row_count-1));
+        var random_item_index_in_row=Math.floor(Math.random()*(item_count-1));
+        while(random_row!=17) {
+            var random_row=Math.floor(Math.random()*(row_count-1));
+        }
+        console.log("LOL");
+
+        //Ensuring that the mine isn't placed in the same place twice
+        while(board[random_row][random_item_index_in_row]=="M") {
+            random_row=Math.floor(Math.random()*(row_count-1));
+            random_item_index_in_row=Math.floor(Math.random()*(item_count-1));
+        }
+        board[random_row][random_item_index_in_row]="M";
+    }
+
+
+
+
+    //Count corner mines
+
+    corner_adjacent_lst=[
+
+        [board[0][1], board[1][0], board[1][1]],//Top left corner
+        [board[0][item_count-2], board[1][item_count-1], board[1][item_count-2]],//Top right corner
+        [board[row_count-2][0], board[row_count-2][1], board[row_count-1][1]],//Bottom left corner
+        [board[row_count-1][item_count-2], board[row_count-2][item_count-1], board[row_count-2][item_count-2]]//Bottom right corner
+
+    ];
+
+    for(let count=0; count<4; count++) {
+
+        var mine_count=corner_adjacent_lst[count].filter(x => x=="M").length//Counting the total mines in the corner
+
+        //Updating the game board accordingly
+        if(count==0 && board[0][0]==0) {board[0][0]=mine_count;}
+        else if (count==1 && board[0][item_count-1]==0) {board[0][item_count-1]=mine_count;}
+        else if (count==2 && board[row_count-1][0]==0) {board[row_count-1][0]=mine_count;}
+        else if (count==3 && board[row_count-1][item_count-1]==0) {board[row_count-1][item_count-1]=mine_count;}
+    }
+
+
+
+
+
+
+
+    //Count edge mines
+
+    //Top edge
+    for(let item=1; item<(item_count-1); item++) {
+
+        if(board[0][item]==0) {
+
+            proximity_squares=[board[0][item-1], board[0][item+1], board[1][item-1], board[1][item], board[1][item+1]];
+            board[0][item]=proximity_squares.filter(x => x=="M").length;
+        }
+    }
+
+    //Left edge
+    for(let row=1; row<(row_count-1); row++) {
+
+        if(board[row][0]==0) {
+
+            proximity_squares=[board[row-1][0], board[row+1][0], board[row-1][1], board[row][1], board[row+1][1]];
+            board[row][0]=proximity_squares.filter(x => x=="M").length;
+        }
+    }
+    
+    //Bottom edge
+    for(let item=1; item<(item_count-1); item++) {
+
+        if(board[row_count-1][item]==0) {
+
+            proximity_squares=[board[row_count-1][item-1], board[row_count-1][item+1], board[row_count-2][item-1], board[row_count-2][item], board[row_count-2][item+1]];
+            board[row_count-1][item]=proximity_squares.filter(x => x=="M").length;
+        }
+    }
+
+    //Right edge
+    for(let row=1; row<(row_count-1); row++) {
+
+        if(board[row][item_count-1]==0) {
+
+            proximity_squares=[board[row-1][item_count-1], board[row+1][item_count-1], board[row-1][item_count-2], board[row][item_count-2], board[row+1][item_count-2]];
+            board[row][item_count-1]=proximity_squares.filter(x => x=="M").length;
+        }
+    }
+
+
+
+
+    //Count all other mines
+
+    for(let row=1; row<(row_count-1); row++) {
+        for(let item=1; item<(item_count-1); item++) {
+            if(board[row][item]==0) {
+                proximity_squares=[board[row-1][item-1], board[row-1][item], board[row-1][item+1], board[row][item-1], board[row][item+1], board[row+1][item-1], board[row+1][item], board[row+1][item+1]]
+                board[row][item]=proximity_squares.filter(x => x=="M").length;
+            }
+        }
+    }
+    renderGameBoard();
+}
+
+
+
+
+
+
+
+//Algorithm designed to check for duplicate squares
+function check_for_duplicate_square(squares_already_iterated, square_index) {
+
+    var duplicate_square=false;
+    for(i of squares_already_iterated) {
+        if(i==square_index) {
+            duplicate_square=true;
+            break;
+        }
+    }
+    return duplicate_square;
+}
+
+
+
+
+
+
+
+//Algorithm to reveal all adjacent squares next to 0s - This is done using recursive revealing
+function reveal_squares(buttonNumber) {
+
+    var row_index=(Math.ceil(((buttonNumber)/item_count)))-1//Retrieving the index of the row
+    var item_index_in_row=(buttonNumber)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+    var total_squares_with_0=[];
+    var current_proximity_squares=[[row_index, item_index_in_row]];
+    
+    for(let i of current_proximity_squares) {
+
+        row_index=i[0];
+        item_index_in_row=i[1];
+
+        try{if(board[row_index-1][item_index_in_row-1]==0 && item_in_array([row_index-1, item_index_in_row-1], total_squares_with_0)==false){total_squares_with_0.push([row_index-1, item_index_in_row-1]); current_proximity_squares.push([row_index-1, item_index_in_row-1]);}} catch(err) {}
+        try{if(board[row_index-1][item_index_in_row]==0 && item_in_array([row_index-1, item_index_in_row], total_squares_with_0)==false) {total_squares_with_0.push([row_index-1, item_index_in_row]); current_proximity_squares.push([row_index-1, item_index_in_row]);}} catch(err) {}
+        try{if(board[row_index-1][item_index_in_row+1]==0 && item_in_array([row_index-1, item_index_in_row+1], total_squares_with_0)==false) {total_squares_with_0.push([row_index-1, item_index_in_row+1]); current_proximity_squares.push([row_index-1, item_index_in_row+1]);}} catch(err) {}
+
+        try{if(board[row_index][item_index_in_row-1]==0 && item_in_array([row_index, item_index_in_row-1], total_squares_with_0)==false) {total_squares_with_0.push([row_index, item_index_in_row-1]); current_proximity_squares.push([row_index, item_index_in_row-1]);}} catch(err) {}
+        try{if(board[row_index][item_index_in_row+1]==0 && item_in_array([row_index, item_index_in_row+1], total_squares_with_0)==false) {total_squares_with_0.push([row_index, item_index_in_row+1]); current_proximity_squares.push([row_index, item_index_in_row+1]);}} catch(err) {}
+
+        try{if(board[row_index+1][item_index_in_row-1]==0 && item_in_array([row_index+1, item_index_in_row-1], total_squares_with_0)==false) {total_squares_with_0.push([row_index+1, item_index_in_row-1]); current_proximity_squares.push([row_index+1, item_index_in_row-1]);}} catch(err) {}
+        try{if(board[row_index+1][item_index_in_row]==0 && item_in_array([row_index+1, item_index_in_row], total_squares_with_0)==false) {total_squares_with_0.push([row_index+1, item_index_in_row]); current_proximity_squares.push([row_index+1, item_index_in_row]);}} catch(err) {}
+        try{if(board[row_index+1][item_index_in_row+1]==0 && item_in_array([row_index+1, item_index_in_row+1], total_squares_with_0)==false) {total_squares_with_0.push([row_index+1, item_index_in_row+1]); current_proximity_squares.push([row_index+1, item_index_in_row+1]);}} catch(err) {}
+ 
+        delete current_proximity_squares[0];
+
+    }
+
+    if(total_squares_with_0.length==0) {total_squares_with_0.push([row_index, item_index_in_row]);}
+    updateGameBoard(total_squares_with_0);
+}
+
+
+
+
+
+
+function item_in_array(elem, arr) {
+    for(let i of arr) {
+        if(elem[0]==i[0] && elem[1]==i[1]) {
+            return true;
+            break;
+        }
+    }
+    return false;
+}
+
+
+
+
+
+
+
+
+
+function renderGameBoard() {
+
+    count=1
+    for(row of board) {
+        for(item of row) {
+
+            button_ID="button_"+count.toString();
+            document.getElementById(button_ID).textContent=item;
+            //document.getElementById(button_ID).style.color="black";
+            document.getElementById(button_ID).style.fontSize="20px";
+            count+=1;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+function updateGameBoard(array) {
+
+    //Revealing all the squares with 0
+    for(var square of array) {
+
+        var row=square[0];
+        var item=square[1];
+
+        if(row<row_count && item<item_count) {
+            var button_number=item_count*row+(item+1);
+    
+            var button_ID="button_"+button_number.toString();
+            if(document.getElementById(button_ID).style.backgroundImage=='url("images/Flag.png")') {minesUnflagged+=1;}
+
+            document.getElementById(button_ID).style.backgroundImage='url("images/Transparent.png")';
+            document.getElementById(button_ID).style.backgroundColor="#deeaee";
+            document.getElementById(button_ID).style.color="#deeaee";
+        }
+    }   
+
+
+    //Revealing everything else in proximity to the 0
+    var proximity_squares=[];
+
+    for(var square of array) {
+
+        var row=square[0];
+        var item=square[1];
+
+        
+        try{if(item_in_array([row-1, item-1], array)==false && row-1>=0 && item-1>=0 && row-1<row_count && item-1<item_count && item_in_array([row-1, item-1], proximity_squares)==false) {proximity_squares.push([row-1, item-1]);}} catch(err) {}
+        try{if(item_in_array([row-1, item], array)==false && row-1>=0 && item>=0 && row-1<row_count && item<item_count && item_in_array([row-1, item], proximity_squares)==false) {proximity_squares.push([row-1, item]);}} catch(err) {}
+        try{if(item_in_array([row-1, item+1], array)==false && row-1>=0 && item+1>=0 && row-1<row_count && item+1<item_count && item_in_array([row-1, item+1], proximity_squares)==false) {proximity_squares.push([row-1, item+1]);}} catch(err) {}
+
+        try{if(item_in_array([row, item-1], array)==false && row>=0 && item-1>=0 && row<row_count && item-1<item_count && item_in_array([row, item-1], proximity_squares)==false) {proximity_squares.push([row, item-1]);}} catch(err) {}
+        try{if(item_in_array([row, item+1], array)==false && row>=0 && item+1>=0 && row<row_count && item+1<item_count && item_in_array([row, item+1], proximity_squares)==false) {proximity_squares.push([row, item+1]);}} catch(err) {}
+
+        try{if(item_in_array([row+1, item-1], array)==false && row+1>=0 && item-1>=0 && row+1<row_count && item-1<item_count && item_in_array([row+1, item-1], proximity_squares)==false) {proximity_squares.push([row+1, item-1]);}} catch(err) {}
+        try{if(item_in_array([row+1, item], array)==false && row+1>=0 && item>=0 && row+1<row_count && item<item_count && item_in_array([row+1, item], proximity_squares)==false) {proximity_squares.push([row+1, item]);}} catch(err) {}
+        try{if(item_in_array([row+1, item+1], array)==false && row+1>=0 && item+1>=0 && row+1<row_count && item+1<item_count && item_in_array([row+1, item+1], proximity_squares)==false) {proximity_squares.push([row+1, item+1]);}} catch(err) {}
+    
+    }
+
+    //console.log(proximity_squares);
+
+
+    for(var square of proximity_squares) {
+        
+        var row=square[0];
+        var item=square[1];
+        var button_number=item_count*row+(item+1);
+
+        var button_ID="button_"+button_number.toString();
+        reveal_any_square(button_ID, row, item);
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let first_mine=false;
+let first_mine_index=0;
+function reveal_any_square(button_ID, row, item) {
+
+    if(document.getElementById(button_ID).style.backgroundImage!='url("images/Flag.png")') {
+
+        document.getElementById(button_ID).style.backgroundColor="#deeaee";
+        document.getElementById(button_ID).style.fontWeight="bold";
+            
+        if(board[row][item]=="0") {document.getElementById(button_ID).style.color="#deeaee";}
+        else if(board[row][item]=="1") {document.getElementById(button_ID).style.color="#0274FF";}
+        else if(board[row][item]=="2") {document.getElementById(button_ID).style.color="#4BD665";}
+        else if(board[row][item]=="3") {document.getElementById(button_ID).style.color="#FF0000";}
+        else if(board[row][item]=="4") {document.getElementById(button_ID).style.color="#0208A1";}
+        else if(board[row][item]=="5") {document.getElementById(button_ID).style.color="#930202";}
+        else if(board[row][item]=="6") {document.getElementById(button_ID).style.color="#48BDC7";}
+        else if(board[row][item]=="7") {document.getElementById(button_ID).style.color="#000000";}
+        else if(board[row][item]=="8") {document.getElementById(button_ID).style.color="#8F8F8F";}
+        else if(board[row][item]=="M") {
+
+            if(first_mine==false) {first_mine_index=button_ID; first_mine=true; check_for_mistakes();}
+            else if(first_mine_index==button_ID) {document.getElementById(button_ID).style.backgroundColor="red"; document.getElementById("button_icon").src="images/GameOver_icon.png"; clearInterval(timerCoroutine);}
+
+            document.getElementById(button_ID).style.backgroundImage='url("images/Mine.png")'; 
+            document.getElementById(button_ID).style.color="rgba(0, 0, 0, 0)";
+            if(gameOver==false) {end_game();}
+            }
+    }
+
+    if(gameOver==false) {
+        check_for_winner();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function end_game() {
+
+    //Retrieving all the mines
+    gameOver=true;
+
+    var mine_coords=[];
+    var item=0;
+
+    for(var row=0; row<row_count; row++ ) {
+        for(var j of board[row]) {
+            if(j=="M") {
+                mine_coords.push([row, item]);
+            }
+            item+=1;
+        }
+        item=0;
+    }
+
+    for(var mine of mine_coords) {
+
+        var row=mine[0];
+        var item=mine[1];
+
+        var button_number=item_count*row+(item+1);
+        var button_ID="button_"+button_number.toString();
+
+        reveal_any_square(button_ID, row, item);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+function check_for_winner() {
+
+    var current_mine_count=0;
+    for(var i=0; i<(row_count*item_count); i++) {
+
+        var button_ID="button_"+(i+1).toString();
+
+        if(document.getElementById(button_ID).style.backgroundColor=="rgb(252, 239, 169)") {
+            current_mine_count+=1;
+        }
+    }
+
+    if(current_mine_count==totalMineCount) {
+        clearInterval(timerCoroutine);
+        document.getElementById("button_icon").src="images/GameWon_icon.png";
+
+        //Flagging all the unflagged mines
+        for(var i=0; i<(row_count*item_count); i++) {
+
+            var button_ID="button_"+(i+1).toString();
+            var row_index=(Math.ceil(((i+1)/item_count)))-1//Retrieving the index of the row
+            var item_index_in_row=(i+1)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+            if(document.getElementById(button_ID).style.backgroundColor=="rgb(252, 239, 169)" && board[row_index][item_index_in_row]=="M") {
+
+                document.getElementById(button_ID).style.color="rgb(0,0,0,0)";
+                document.getElementById(button_ID).style.backgroundImage='url("images/Flag.png")';
+            }
+        }
+    }
+}
+
+
+
+function check_for_mistakes() {
+
+    for(var i=0; i<(row_count*item_count); i++) {
+
+        var button_ID="button_"+(i+1).toString();
+
+        var row_index=(Math.ceil(((i+1)/item_count)))-1//Retrieving the index of the row
+        var item_index_in_row=(i+1)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+        //Checking for mistakes
+        if(document.getElementById(button_ID).style.backgroundImage=='url("images/Flag.png")' && board[row_index][item_index_in_row]!="M") {
+            document.getElementById(button_ID).style.backgroundImage='url("images/Invalid-Flag.png")';
+        }
+    }
+
+
+}
+
+
+
+function reset_game() {
+
+    //Resetting game board
+    board=[];
+    var button_count=0;
+    for(var i=0; i<row_count; i++) {
+        var row=[];
+        for(var j=0; j<item_count; j++) {
+            row.push(0);
+            button_count+=1;
+
+            var buttonID="button_"+button_count.toString()
+            document.getElementById(buttonID).innerHTML="I";
+            document.getElementById(buttonID).style.color=board_colour;
+            document.getElementById(buttonID).style.backgroundColor=board_colour;
+            document.getElementById(buttonID).style.backgroundImage="url(images/Transparent.png)";
+        }
+        board.push(row);
+
+    }
+    
+    //Resetting variables
+    gameStarted=false;
+    gameOver=false;
+    totalMineCount=0;
+    gameTimer=0;
+    minesUnflagged=0;
+    
+    first_mine=false;
+    first_mine_index=0;
+
+    //Resetting the timer and minecount
+    document.getElementById("mineCount").innerHTML="∞";
+    document.getElementById("gameTime").innerHTML="0.0";
+    document.getElementById("gameTime").style.width="60px";
+    document.getElementById("button_icon").src="images/StartButton_icon.png";
+    clearInterval(timerCoroutine);
+
+    //Generating the game board
+    generateBoard();
+    
+}
+
+
+
+</script>
+
+</body>
+</html>
