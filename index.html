@@ -51,9 +51,12 @@ transform:translateY(4px);
 .hover:hover{background-color: #bebebe;}
 #modal{display: none;}
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> eea5b211ea2e937fb00d0966a2eec0e3193fc881
 .mode_buttons{
     width: 200px; 
     height: 50px; 
@@ -62,6 +65,7 @@ transform:translateY(4px);
     font-weight: bold; 
     position: relative; 
     left: 100px;
+<<<<<<< HEAD
     color: #ffffff;
 }
 #Easy_button{background-color: #3bd33e; box-shadow: 0 7px #246e25;}
@@ -126,6 +130,11 @@ transform:translateY(4px);
 #options-container-background{display: block;}
 #close_button{display: none;}
 
+=======
+
+}
+
+>>>>>>> eea5b211ea2e937fb00d0966a2eec0e3193fc881
 </style>
 
 
@@ -155,6 +164,7 @@ transform:translateY(4px);
 </div>
 
 <div id="options-container-background" style="background-color: rgba(0,0,0, 0.4); height: 100%; width: 100%; z-index: 10; overflow: auto; position: fixed; top: 0;">
+<<<<<<< HEAD
 
     <!--Options container-->
     <div id="options-container" style="height: 450px; width: 400px; background-color: #ffffff; position: relative; margin: auto; top: 100px; border-radius: 5px; border: 2px solid black; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; background-image: url('');">
@@ -186,6 +196,14 @@ transform:translateY(4px);
 
 
         <button style="position: absolute; width: 200px; left: 100px; bottom: 30px; height: 50px; font-size: 20px; background-color: #119160; text-align: center; color: #ffffff; font-weight: bold; border-radius: 10px;" onclick="configure_custom_settings();">Generate Board!</button>
+=======
+    <div id="options-container" style="height: 600px; width: 400px; background-color: #ffffff; position: relative; margin: auto; top: 100px; border-radius: 5px; border: 2px solid black;">
+        <p style="position: relative; text-align: center; height: 40px; width: 100%; font-size: 30px; border-bottom: 4px solid black; line-height: 20px;">Set Mode</p>
+        <button class="mode_buttons">Easy</button><br><br>
+        <button class="mode_buttons">Medium</button><br><br>
+        <button class="mode_buttons">Difficult</button><br><br>
+        <button class="mode_buttons">impossible</button>
+>>>>>>> eea5b211ea2e937fb00d0966a2eec0e3193fc881
     </div>
 </div>
 
@@ -201,6 +219,7 @@ window.gameMode="none";
 var board=[]
 function generate_any_board(width, height) {
 
+<<<<<<< HEAD
     document.getElementById("close_button").style.display="block";
     document.getElementById("options-container-background").style.display="none";
     document.getElementById("button_icon").src="images/StartButton_icon.png"
@@ -211,6 +230,28 @@ function generate_any_board(width, height) {
     document.getElementById("matrix").style.width=matrix_pixel_width.toString()+"px";
     document.getElementById("matrix").style.height=matrix_pixel_height.toString()+"px";
     document.getElementById("startButton/endButton").style.left=(matrix_pixel_width/2-95).toString()+"px";
+=======
+
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    
+    
+>>>>>>> eea5b211ea2e937fb00d0966a2eec0e3193fc881
 
     //Destroying existing game boards to avoid overwrite 
     if(board.length!=0) {
