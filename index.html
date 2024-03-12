@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body onload="generateBoard();" style="margin: 0px;">
+<body style="margin: 0px;">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
@@ -49,8 +49,82 @@ transform:translateY(4px);
 
 .hover{background-color: #ffffff;}
 .hover:hover{background-color: #bebebe;}
-
 #modal{display: none;}
+
+
+
+
+.mode_buttons{
+    width: 200px; 
+    height: 50px; 
+    border-radius: 20px; 
+    font-size: 20px; 
+    font-weight: bold; 
+    position: relative; 
+    left: 100px;
+    color: #ffffff;
+}
+#Easy_button{background-color: #3bd33e; box-shadow: 0 7px #246e25;}
+#Easy_button:hover{background-color: #349837;}
+#Easy_button:active{box-shadow: 0 5px #246e25;}
+
+#Medium_button{background-color: #e3c532; box-shadow: 0 7px #85741f;}
+#Medium_button:hover{background-color: #877624;}
+#Medium_button:active{box-shadow: 0 5px #85741f;}
+
+#Difficult_button{background-color: #ff3a3a; box-shadow: 0 7px #932222;}
+#Difficult_button:hover{background-color: #952222;}
+#Difficult_button:active{box-shadow: 0 5px #932222;}
+
+#Extreme_button{background-color: #79006d; box-shadow: 0 7px #4a0243;}
+#Extreme_button:hover{background-color: #55004d;}
+#Extreme_button:active{box-shadow: 0 5px #4a0243;}
+
+
+.slider {
+    position: relative;
+    left: 10px;
+  -webkit-appearance: none;
+  width: 300px;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 1;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+.slider:hover {
+  opacity: 1;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #08c9d3;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #08c9d3;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#back_button:hover{color: red;}
+#close_button:hover{color: red;}
+
+#custom-settings-container{display: none;}
+#options-container-background{display: none;}
+
+
+#matrix{display: none; width: 100px; height: 100px;}
+#options-container-background{display: block;}
+#close_button{display: none;}
 
 </style>
 
@@ -59,11 +133,12 @@ transform:translateY(4px);
 
 
 
-
-<div id="matrix" style="margin: auto; width: 720px; height: 720px;" class="prevent-select">
+<h1 style="text-align: center;">Minesweeper Game</h1>
+<br>
+<div id="matrix" style="margin: auto; overflow: auto;" class="prevent-select">
 
     <div id="information_bar">
-        <button id="mineCount" style="width: 60px; height: 60px; border-radius: 5px; position: relative; left: 3%; background-color: #000000; color: #00e5ff; font-size: 30px; top: -15px; font-family: pixelated;">∞</button>               <button id="startButton/endButton" style="width: 60px; height: 60px; border-radius: 5px; position: relative; left: 37%; top: 5px;" onclick="document.getElementById('modal').style.display='block';"><img id="button_icon" src="images/StartButton_icon.png" style="width: auto; height: 100%; transform: translateX(-4px);"></button>           <button id="gameTime" style="width: 60px; height: 60px; border-radius: 5px; position: relative; left: 70%; background-color: #000000; color: #00e5ff; font-size: 30px; top: -15px; font-family: pixelated;">0.0</button>
+        <button id="mineCount" style="width: 60px; height: 60px; border-radius: 5px; position: relative; background-color: #000000; color: #00e5ff; font-size: 30px; top: -15px; font-family: pixelated;">∞</button>               <button id="startButton/endButton" style="width: 60px; height: 60px; border-radius: 5px; position: relative; top: 5px; left: 50%;" onclick="document.getElementById('modal').style.display='block';"><img id="button_icon" src="images/StartButton_icon.png" style="width: auto; height: 100%; transform: translateX(-4px);"></button>           <i class="fa fa-bars" style="font-size: 40px; position: relative;" onclick="document.getElementById('options-container-background').style.display='block';"></i><button id="gameTime" style="width: 60px; height: 60px; border-radius: 5px; position: relative; background-color: #000000; color: #00e5ff; font-size: 30px; transform: translateY(5px); font-family: pixelated; float: right;">0.0</button>
     </div>
 
     
@@ -72,10 +147,45 @@ transform:translateY(4px);
 
 <div id="modal" style="background-color: rgba(0,0,0, 0.4); height: 100%; width: 100%; z-index: 10; overflow: auto; position: fixed; top: 0;">
 
-    <div id="alert_box" style="height: 100px; width: 400px; background-color: #ffffff; border-radius: 5px;position: relative; border: 3px solid black; margin: auto; top: 100px;">
+    <div id="alert_box" style="height: 100px; width: 400px; background-color: #ffffff; border-radius: 5px; position: relative; border: 3px solid black; margin: auto; top: 100px;">
         <p style="text-align: center; font-size: 20px; font-weight: bold;">Are you sure you want to start a new game?</p>
         <button style="position: relative; left: 0px; bottom: 1px; width: 50%; height: 40px; border-bottom-left-radius: 5px; border-width: 2px; font-size: 20px;" class="hover" onclick="reset_game(); document.getElementById('modal').style.display='none';">Yes</button>
         <button style="position: relative; right: -200px; bottom: 41px; width: 50%; height: 40px; border-bottom-right-radius: 5px; border-width: 2px; font-size: 20px; z-index: 2;" class="hover" onclick="document.getElementById('modal').style.display='none';">Cancel</button>
+    </div>
+</div>
+
+<div id="options-container-background" style="background-color: rgba(0,0,0, 0.4); height: 100%; width: 100%; z-index: 10; overflow: auto; position: fixed; top: 0;">
+
+    <!--Options container-->
+    <div id="options-container" style="height: 450px; width: 400px; background-color: #ffffff; position: relative; margin: auto; top: 100px; border-radius: 5px; border: 2px solid black; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; background-image: url('');">
+        
+        <i class="fa fa-times" style="position: absolute; z-index: 1; font-size: 25px; top: 5px; left: 5px;" id="close_button" onclick="document.getElementById('options-container-background').style.display='none';"></i>
+        <div style="position: relative; text-align: center; height: 60px; width: 100%; font-size: 30px; border-bottom: 4px solid black; background-color: #26752d; top: -0px; border-top-left-radius: 5px; border-top-right-radius: 5px; line-height: 60px; color: #ffffff; font-weight: bold;">Set Mode</div><br>
+        <button class="mode_buttons" id="Easy_button" onclick="try{gameMode='Easy';} catch(err) {}; generate_any_board(10, 8);">Easy<p style="font-size: 12px; line-height: 1px;">8x10 board</p></button><br><br>
+        <button class="mode_buttons" id="Medium_button" onclick="try{gameMode='Medium';} catch(err) {}; generate_any_board(20, 15);">Medium<p style="font-size: 12px; line-height: 1px;">15x20 board</p></button><br><br>
+        <button class="mode_buttons" id="Difficult_button" onclick="try{gameMode='Difficult';} catch(err) {}; generate_any_board(26, 19);">Difficult<p style="font-size: 12px; line-height: 1px;">19x26 board</p></button><br><br>
+        <button class="mode_buttons" id="Extreme_button" onclick="try{gameMode='Extreme';} catch(err) {}; generate_any_board(37, 26);">Extreme<p style="font-size: 12px; line-height: 1px;">26x37 board</p></button><br><br>
+        <button class="mode_buttons" style="border: 2px solid #00fff7; background-color: #b4b4b4; width: 300px; left: 50px;" onclick="document.getElementById('options-container').style.display='none'; document.getElementById('custom-settings-container').style.display='block';">Custom...</button>
+    </div>
+
+
+    <!--Custom setting container-->
+    <div id="custom-settings-container" style="height: 450px; width: 400px; background-color: #ffffff; position: relative; margin: auto; top: 100px; border-radius: 5px; border: 2px solid black; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+
+        <i class="fa fa-arrow-left" style="position: absolute; font-size: 30px; z-index: 10; left: 10px; top: 15px;" id="back_button" onclick="document.getElementById('custom-settings-container').style.display='none'; document.getElementById('options-container').style.display='block';"></i>
+        <div style="position: relative; text-align: center; height: 60px; width: 100%; font-size: 30px; border-bottom: 4px solid black; background-color: #26752d; top: -0px; border-top-left-radius: 5px; border-top-right-radius: 5px; line-height: 60px; color: #ffffff; font-weight: bold;">Select custom difficulty</div><br>
+
+        <div style="background-color: #ffffff; font-size: 20px; font-weight: bold; width: 100px; z-index: 10; top: 19px; position: relative; left: 5px;" id="mine_slider_number">Mines: 50</div><br><br>
+        <input type="range" min="1" max="200" value="50" class="slider" id="mine_slider" oninput="displayValues('mine');">
+
+        <div style="background-color: #ffffff; font-size: 20px; font-weight: bold; width: 100px; z-index: 10; top: 19px; position: relative; left: 5px;" id="width_slider_number">Width: 50</div><br><br>
+        <input type="range" min="5" max="50" value="50" class="slider" id="width_slider" oninput="displayValues('none');">
+
+        <div style="background-color: #ffffff; font-size: 20px; font-weight: bold; width: 100px; z-index: 10; top: 19px; position: relative; left: 5px;" id="height_slider_number">Height: 50</div><br><br>
+        <input type="range" min="3" max="50" value="50" class="slider" id="height_slider" oninput="displayValues('none');">
+
+
+        <button style="position: absolute; width: 200px; left: 100px; bottom: 30px; height: 50px; font-size: 20px; background-color: #119160; text-align: center; color: #ffffff; font-weight: bold; border-radius: 10px;" onclick="configure_custom_settings();">Generate Board!</button>
     </div>
 </div>
 
@@ -86,207 +196,295 @@ transform:translateY(4px);
 
 <script>
 
-var board=[
+window.totalMineCount=0;
+window.gameMode="none";
+var board=[]
+function generate_any_board(width, height) {
 
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]                    
+    document.getElementById("close_button").style.display="block";
+    document.getElementById("options-container-background").style.display="none";
+    document.getElementById("button_icon").src="images/StartButton_icon.png"
+    //Formatting the matrix resolution(resizing it based on the board dimensions)
+    var matrix_pixel_width=(width*40);
+    var matrix_pixel_height=(height*40)+130;
+    if(matrix_pixel_width<300) {matrix_pixel_width=300;}
+    document.getElementById("matrix").style.width=matrix_pixel_width.toString()+"px";
+    document.getElementById("matrix").style.height=matrix_pixel_height.toString()+"px";
+    document.getElementById("startButton/endButton").style.left=(matrix_pixel_width/2-95).toString()+"px";
 
-]
+    //Destroying existing game boards to avoid overwrite 
+    if(board.length!=0) {
+        square_number=1;
+        var totalButtonCount=row_count*item_count;
+
+        //Destroying all the break tags
+        var brs = matrix.getElementsByTagName('br');
+        while (brs.length) {
+            brs[0].parentNode.removeChild(brs[0]);
+        }
+
+        //Destroying all the buttons
+        for(var num=0; num<totalButtonCount; num++) {
+            
+            var buttonID="button_"+((num+1).toString());
+            var button_element=document.getElementById(buttonID);
+            button_element.remove();
+        }
+        try{clearInterval(interval); } catch(err) {}
+        try{clearInterval(timerCoroutine);} catch(err) {}
+        document.getElementById("gameTime").innerHTML="0.0";
+        gameOver=false;
+        gameStarted=false;
+        gameTimer=0;
+        minesUnflagged=0;
+        first_mine=false;
+        first_mine_index=0;
+    }
+    board=[];
+
+    for(var i=0; i<height; i++) {
+        var row=[];
+        for(var j=0; j<width; j++) {
+            row.push(0);
+        }
+        board.push(row);
+    }
+    window.row_count=board.length;
+    window.item_count=board[0].length;
+    draw_board();
+    generateBoard();
+    document.getElementById("matrix").style.display="block";
+}
+
+
+
+
+
+
+
+
+function configure_custom_settings() {
+
+
+    var board_width=parseInt(document.getElementById("width_slider").value);
+    var board_height=parseInt(document.getElementById("height_slider").value);
+    var board_mine_count=parseInt(document.getElementById("mine_slider").value);
+
+    if(board_height*board_width>board_mine_count) {
+        totalMineCount=board_mine_count;
+        gameMode="Custom";
+        generate_any_board(board_width, board_height);
+    }
+}
+
+
+
+
+
+
+
+
+function displayValues(type) {
+
+    var mine_slider=document.getElementById("mine_slider").value;
+    var width_slider=parseInt(document.getElementById("width_slider").value);
+    var height_slider=parseInt(document.getElementById("height_slider").value);
+
+    if(type!="mine") {
+        mine_slider=Math.ceil((width_slider*height_slider)*0.2063);
+    }
+
+    document.getElementById("mine_slider_number").innerHTML="Mines: "+mine_slider;
+    document.getElementById("width_slider_number").innerHTML="Width: "+width_slider;
+    document.getElementById("height_slider_number").innerHTML="Height: "+height_slider;
+    document.getElementById("mine_slider").value=mine_slider;
+}
 
 //Intitalising the game board
 
 window.gameStarted=false;
 window.gameOver=false;
-window.totalMineCount=0;
 window.gameTimer=0;
 window.timerCoroutine;
 window.minesUnflagged=0;
 
-board_colour="#fcefa9";
-
-row_count=board.length;
-item_count=board[0].length;
-
-square_number=1
-
-for(let i=0; i<row_count; i++) {
-
-    for(let j=0; j<item_count; j++){
-
-        var newButton=document.createElement('button');
-        newButton.textContent="I";
-        newButton.style.color=board_colour;
-
-        //Formatiing the button styles
-        newButton.style.borderWidth="1px";
-        newButton.style.height="40px";
-        newButton.style.width="40px";
-        newButton.style.backgroundColor=board_colour;
-        newButton.style.backgroundImage="url('images/Transparent.png')";
-        newButton.style.backgroundSize="37px 37px";
-
-        newButton.id="button_"+square_number.toString();
-       // document.getElementById(newButton.id).addEventListener("dblclick", console.log(1));
-        
+window.board_colour="#fcefa9";
+window.square_number=1;
 
 
-        matrix.appendChild(newButton);
-        square_number+=1;
+
+
+
+
+
+function draw_board() {
+    for(let i=0; i<row_count; i++) {
+
+        for(let j=0; j<item_count; j++){
+
+            var newButton=document.createElement('button');
+            newButton.textContent="I";
+            newButton.style.color=board_colour;
+
+            //Formatiing the button styles
+            newButton.style.borderWidth="1px";
+            newButton.style.height="40px";
+            newButton.style.width="40px";
+            newButton.style.backgroundColor=board_colour;
+            newButton.style.backgroundImage="url('images/Transparent.png')";
+            newButton.style.backgroundSize="37px 37px";
+
+            newButton.id="button_"+square_number.toString();
+        // document.getElementById(newButton.id).addEventListener("dblclick", console.log(1));
+            matrix.appendChild(newButton);
+            square_number+=1;
+        }
+        matrix.appendChild(document.createElement("br"));
     }
     matrix.appendChild(document.createElement("br"));
-}
-matrix.appendChild(document.createElement("br"));
-matrix.appendChild(document.createElement("br"));
+    matrix.appendChild(document.createElement("br"));
 
-var btns=document.getElementById("matrix").querySelectorAll("button");
-let timer=0;
-let interval;
-let button_flagged=false;
+    var btns=document.getElementById("matrix").querySelectorAll("button");
 
-for(i of btns) {
-
-    //Adding an event listener to all of the buttons in the matrix
-
-    i.addEventListener("mousedown", function() {
-
-        if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
-
-        timer=new Date().getTime();
-
-        var buttonID=this.id;
-        var str1=buttonID.split("_");
-
-        if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
-            button_flagged=false;
-            interval=setInterval(held_click, 500, buttonID, str1);
-        }
-    });
+    let timer=0;
+    let interval;
+    let button_flagged=false;
 
 
+    for(i of btns) {
 
+        //Adding an event listener to all of the buttons in the matrix
 
+        i.addEventListener("mousedown", function() {
+            console.log("LOL");
+            if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
 
-    i.addEventListener("mouseup", function() {
+            timer=new Date().getTime();
 
-        clearInterval(interval);
-        var current_time=new Date().getTime();
-
-
-        /*
-        if(current_time-timer>1000) {
             var buttonID=this.id;
             var str1=buttonID.split("_");
 
             if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
-                var numberOfButton=parseInt(str1[1]);
-                flagControl(numberOfButton);
-                button_flagged=true;
+                button_flagged=false;
+                interval=setInterval(held_click, 500, buttonID, str1);
             }
-        }
-        */
-        if(current_time-timer<500) {
+        });
+
+
+
+
+
+        i.addEventListener("mouseup", function() {
+
+            clearInterval(interval);
+            var current_time=new Date().getTime();
+
+
+            /*
+            if(current_time-timer>1000) {
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                    var numberOfButton=parseInt(str1[1]);
+                    flagControl(numberOfButton);
+                    button_flagged=true;
+                }
+            }
+            */
+            if(current_time-timer<500) {
+
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID) {
+
+                    var numberOfButton=parseInt(str1[1]);
+
+                    var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
+                    var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
+                    
+                    if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
+                        
+                        reveal_squares(numberOfButton); 
+                    }
+                    else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
+                        
+                        reveal_any_square(buttonID, row_index, item_index_in_row);
+                    }
+                }        
+            }
+        });
+
+
+
+        i.addEventListener("touchstart", function() {
+
+            if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
+
+            timer=new Date().getTime();
 
             var buttonID=this.id;
             var str1=buttonID.split("_");
 
-            if(str1!=buttonID) {
+            if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                button_flagged=false;
+                interval=setInterval(held_click, 500, buttonID, str1);
+            }
+        });
 
-                var numberOfButton=parseInt(str1[1]);
 
-                var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
-                var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+    
+        i.addEventListener("touchend", function() {
+            clearInterval(interval);
+            var current_time=new Date().getTime();
+
+        
+            /*
+            if(current_time-timer>1000) {
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                    var numberOfButton=parseInt(str1[1]);
+                    flagControl(numberOfButton);
+                    button_flagged=true;
+                }
+            }
+            */
+            if(current_time-timer<500) {
+
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID) {
+
+                    var numberOfButton=parseInt(str1[1]);
+                    var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
+                    var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
                 
-                if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
-                    
-                    reveal_squares(numberOfButton); 
-                }
-                else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
-                    
-                    reveal_any_square(buttonID, row_index, item_index_in_row);
-                }
-            }        
-        }
-    });
-
-
-
-
-
-    i.addEventListener("touchstart", function() {
-
-        if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
-
-        timer=new Date().getTime();
-
-        var buttonID=this.id;
-        var str1=buttonID.split("_");
-
-        if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
-            button_flagged=false;
-            interval=setInterval(held_click, 500, buttonID, str1);
-        }
-    });
-
-
-
-    
-
-    i.addEventListener("touchend", function() {
-        clearInterval(interval);
-        var current_time=new Date().getTime();
-
-    
-        /*
-        if(current_time-timer>1000) {
-            var buttonID=this.id;
-            var str1=buttonID.split("_");
-
-            if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
-                var numberOfButton=parseInt(str1[1]);
-                flagControl(numberOfButton);
-                button_flagged=true;
+                    if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
+                        
+                        reveal_squares(numberOfButton); 
+                    }
+                    else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
+                        
+                        reveal_any_square(buttonID, row_index, item_index_in_row);
+                    }
+                }        
             }
-        }
-        */
-        if(current_time-timer<500) {
-
-            var buttonID=this.id;
-            var str1=buttonID.split("_");
-
-            if(str1!=buttonID) {
-
-                var numberOfButton=parseInt(str1[1]);
-                var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
-                var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
-            
-                if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
-                    
-                    reveal_squares(numberOfButton); 
-                }
-                else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
-                    
-                    reveal_any_square(buttonID, row_index, item_index_in_row);
-                }
-            }        
-        }
-    });
+        });
+    }
 }
+
+
+
+
+
+
+
+
 
 
 function held_click(buttonID, str1) {
@@ -294,8 +492,9 @@ function held_click(buttonID, str1) {
     var numberOfButton=parseInt(str1[1]);
     flagControl(numberOfButton);
     button_flagged=true;
-    clearInterval(interval);
+    try{clearInterval(interval);} catch(err) {}
 }
+
 
 
 
@@ -312,6 +511,15 @@ function flagControl(button) {
     document.getElementById("mineCount").innerHTML=minesUnflagged.toString();
 
 }
+
+
+
+
+
+
+
+
+
 
 
 function startTimer() {
@@ -338,6 +546,10 @@ function startTimer() {
 
 
 
+
+
+
+
 /*
 0,0,M,0,0,0,M,0,0,0,0,0,0,M,0,0,M,0,
 0,0,0,0,M,0,M,0,M,0,0,0,0,0,0,0,0,0,
@@ -360,26 +572,26 @@ M,0,0,0,0,M,0,M,0,0,0,0,0,0,0,0,0,0,
 
 */
 
+
 function generateBoard() {
 
 
     //Generating the mines
-    var number_of_squares=row_count*item_count;//Calculating total squares on the board
-    var mine_number=(row_count*item_count)*0.2063;//Determining the number of mines to be placed on the board - original mine count for 18 by 18 board: 40
-    mine_number=Math.floor(mine_number);
-    totalMineCount=mine_number;
-    minesUnflagged=mine_number;
+
+    if(gameMode!="Custom") {
+        var number_of_squares=row_count*item_count;//Calculating total squares on the board
+        var mine_number=(row_count*item_count)*0.2063;//Determining the number of mines to be placed on the board - original mine count for 18 by 18 board: 40
+        mine_number=Math.ceil(mine_number);
+        totalMineCount=mine_number;
+    }
+    minesUnflagged=totalMineCount;
 
     document.getElementById("mineCount").innerHTML=minesUnflagged.toString();
 
-    for(let i=0; i<mine_number; i++) {
+    for(let i=0; i<totalMineCount; i++) {
         //console.log(i);
-        var random_row=Math.floor(Math.random()*(row_count-1));
-        var random_item_index_in_row=Math.floor(Math.random()*(item_count-1));
-        while(random_row!=17) {
-            var random_row=Math.floor(Math.random()*(row_count-1));
-        }
-        console.log("LOL");
+        var random_row=Math.floor(Math.random()*(row_count));
+        var random_item_index_in_row=Math.floor(Math.random()*(item_count));
 
         //Ensuring that the mine isn't placed in the same place twice
         while(board[random_row][random_item_index_in_row]=="M") {
@@ -484,6 +696,8 @@ function generateBoard() {
 
 
 
+
+
 //Algorithm designed to check for duplicate squares
 function check_for_duplicate_square(squares_already_iterated, square_index) {
 
@@ -563,9 +777,11 @@ function renderGameBoard() {
 
     count=1
     for(row of board) {
+
         for(item of row) {
 
             button_ID="button_"+count.toString();
+
             document.getElementById(button_ID).textContent=item;
             //document.getElementById(button_ID).style.color="black";
             document.getElementById(button_ID).style.fontSize="20px";
@@ -659,6 +875,7 @@ function updateGameBoard(array) {
 let first_mine=false;
 let first_mine_index=0;
 function reveal_any_square(button_ID, row, item) {
+    
 
     if(document.getElementById(button_ID).style.backgroundImage!='url("images/Flag.png")') {
 
@@ -675,7 +892,6 @@ function reveal_any_square(button_ID, row, item) {
         else if(board[row][item]=="7") {document.getElementById(button_ID).style.color="#000000";}
         else if(board[row][item]=="8") {document.getElementById(button_ID).style.color="#8F8F8F";}
         else if(board[row][item]=="M") {
-
             if(first_mine==false) {first_mine_index=button_ID; first_mine=true; check_for_mistakes();}
             else if(first_mine_index==button_ID) {document.getElementById(button_ID).style.backgroundColor="red"; document.getElementById("button_icon").src="images/GameOver_icon.png"; clearInterval(timerCoroutine);}
 
@@ -820,7 +1036,9 @@ function reset_game() {
     //Resetting variables
     gameStarted=false;
     gameOver=false;
-    totalMineCount=0;
+    if(gameMode!="Custom") {
+        totalMineCount=0;
+    }
     gameTimer=0;
     minesUnflagged=0;
     
