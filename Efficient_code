@@ -1,0 +1,19 @@
+    for(var row=0; row<row_count; row++) {
+        for(var item=0; item<item_count; item++) {
+            if(board[row][item]!="M") {
+                var mine_count=0;
+                try{if(board[row-1][item-1]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row-1][item]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row-1][item+1]=="M") {mine_count+=1;}} catch(err) {}
+
+                try{if(board[row][item-1]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row][item+1]=="M") {mine_count+=1;}} catch(err) {}
+
+                try{if(board[row+1][item-1]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row+1][item]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row+1][item+1]=="M") {mine_count+=1;}} catch(err) {}
+
+                board[row][item]=mine_count;
+            }
+        }
+    }
