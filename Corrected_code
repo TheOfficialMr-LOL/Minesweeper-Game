@@ -1,0 +1,1154 @@
+
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
+
+<title>Mine Mania</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="margin: 0px;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+
+
+
+.prevent-select {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/*
+#startButton{
+
+border-radius: 15px;
+background-color: #04AA6d;
+box-shadow: 0 7px #06764b;
+color: #fff;
+font-size: 30px;
+display: block;
+}
+#startButton:hover{background-color: #3e8e41}
+#startButton:active{
+
+background-color: #3e8e41;
+box-shadow: 0 5px #066c45;
+transform:translateY(4px);
+
+}
+*/
+#startButton:hover{background-color: #c2c2c2;}
+
+@font-face {
+    font-family: "pixelated";
+    src: url('arcade_classic.ttf');
+}
+
+.hover{background-color: #ffffff;}
+.hover:hover{background-color: #bebebe;}
+#modal{display: none;}
+
+.mode_buttons{
+    width: 200px; 
+    height: 50px; 
+    border-radius: 20px; 
+    font-size: 20px; 
+    font-weight: bold; 
+    position: relative; 
+    left: 100px;
+
+    color: #ffffff;
+}
+#Easy_button{background-color: #3bd33e; box-shadow: 0 7px #246e25;}
+#Easy_button:hover{background-color: #349837;}
+#Easy_button:active{box-shadow: 0 5px #246e25;}
+
+#Medium_button{background-color: #e3c532; box-shadow: 0 7px #85741f;}
+#Medium_button:hover{background-color: #877624;}
+#Medium_button:active{box-shadow: 0 5px #85741f;}
+
+#Difficult_button{background-color: #ff3a3a; box-shadow: 0 7px #932222;}
+#Difficult_button:hover{background-color: #952222;}
+#Difficult_button:active{box-shadow: 0 5px #932222;}
+
+#Extreme_button{background-color: #79006d; box-shadow: 0 7px #4a0243;}
+#Extreme_button:hover{background-color: #55004d;}
+#Extreme_button:active{box-shadow: 0 5px #4a0243;}
+
+
+.slider {
+    position: relative;
+    left: 10px;
+  -webkit-appearance: none;
+  width: 300px;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 1;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+.slider:hover {
+  opacity: 1;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #08c9d3;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #08c9d3;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#back_button:hover{color: red;}
+#close_button:hover{color: red;}
+
+#custom-settings-container{display: none;}
+#options-container-background{display: none;}
+
+
+#matrix{display: none; width: 100px; height: 100px;}
+#options-container-background{display: block;}
+#close_button{display: none;}
+
+#close_button_account:hover{color: red;}
+#back_button_account:hover{color: red;}
+
+#account-settings-container-background{display: none;}
+#loginToAccount{display: none;}
+
+#account-menu:hover{color: #505050;}
+#menu:hover{color: #505050;}
+
+#submitAccountRequestButton{background-color: #119160;}
+#submitAccountRequestButton:hover{background-color: #0f714c;}
+
+</style>
+
+
+
+
+
+
+<h1 style="text-align: center; font-size: 50px;"><u>Mine Mania</u></h1>
+<br>
+<div id="matrix" style="margin: auto; overflow: auto; border: 20px solid white; touch-action: auto;" class="prevent-select">
+
+    <div id="information_bar">
+        <button id="mineCount" style="width: 80px; height: 60px; border-radius: 5px; position: relative; background-color: #000000; color: #00e5ff; font-size: 30px; top: -15px; font-family: pixelated; transform: translateY(2px);">âˆž</button>               <button id="startButton" style="width: 60px; height: 60px; border-radius: 5px; position: relative; top: 5px; left: 50%;" onclick="document.getElementById('modal').style.display='block';"><img id="button_icon" src="images/StartButton_icon.png" style="width: auto; height: 100%; transform: translateX(-4px);"></button>           <i class="fa fa-bars" id="menu" style="font-size: 40px; position: relative;" onclick="document.getElementById('options-container-background').style.display='block';"></i><button id="gameTime" style="width: 60px; height: 60px; border-radius: 5px; position: relative; background-color: #000000; color: #00e5ff; font-size: 30px; font-family: pixelated; float: right; transform: translateY(4px);">0.0</button> <i class="fa fa-user-circle-o" id="account-menu" style="font-size: 40px; position: relative; display: none;" onclick="document.getElementById('account-settings-container-background').style.display='block';"></i>
+    </div>
+</div>
+
+<div id="modal" style="background-color: rgba(0,0,0, 0.4); height: 100%; width: 100%; z-index: 10; overflow: auto; position: fixed; top: 0;">
+
+    <div id="alert_box" style="height: 100px; width: 400px; background-color: #ffffff; border-radius: 5px; position: relative; border: 3px solid black; margin: auto; top: 100px;">
+        <p style="text-align: center; font-size: 20px; font-weight: bold;">Are you sure you want to start a new game?</p>
+        <button style="position: relative; left: 0px; bottom: 1px; width: 50%; height: 40px; border-bottom-left-radius: 5px; border-width: 2px; font-size: 20px;" class="hover" onclick="reset_game(); document.getElementById('modal').style.display='none';">Yes</button>
+        <button style="position: relative; right: -200px; bottom: 41px; width: 50%; height: 40px; border-bottom-right-radius: 5px; border-width: 2px; font-size: 20px; z-index: 2;" class="hover" onclick="document.getElementById('modal').style.display='none';">Cancel</button>
+    </div>
+</div>
+
+<div id="options-container-background" style="background-color: rgba(0,0,0, 0.4); height: 100%; width: 100%; z-index: 10; overflow: auto; position: fixed; top: 0;">
+
+    <!--Options container-->
+    <div id="options-container" style="height: 450px; width: 400px; background-color: #ffffff; position: relative; margin: auto; top: 100px; border-radius: 5px; border: 2px solid black; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+        
+        <i class="fa fa-times" style="position: absolute; z-index: 1; font-size: 25px; top: 5px; left: 5px;" id="close_button" onclick="document.getElementById('options-container-background').style.display='none';"></i>
+        <div style="position: relative; text-align: center; height: 60px; width: 100%; font-size: 30px; border-bottom: 4px solid black; background-color: #26752d; top: -0px; border-top-left-radius: 5px; border-top-right-radius: 5px; line-height: 60px; color: #ffffff; font-weight: bold;">Set Mode</div><br>
+        <button class="mode_buttons" id="Easy_button" onclick="try{gameMode='Easy';} catch(err) {}; generate_any_board(10, 8);">Easy<p style="font-size: 12px; line-height: 1px;">8x10 board</p></button><br><br>
+        <button class="mode_buttons" id="Medium_button" onclick="try{gameMode='Medium';} catch(err) {}; generate_any_board(20, 15);">Medium<p style="font-size: 12px; line-height: 1px;">15x20 board</p></button><br><br>
+        <button class="mode_buttons" id="Difficult_button" onclick="try{gameMode='Difficult';} catch(err) {}; generate_any_board(26, 19);">Difficult<p style="font-size: 12px; line-height: 1px;">19x26 board</p></button><br><br>
+        <button class="mode_buttons" id="Extreme_button" onclick="try{gameMode='Extreme';} catch(err) {}; generate_any_board(37, 26);">Extreme<p style="font-size: 12px; line-height: 1px;">26x37 board</p></button><br><br>
+        <button class="mode_buttons" style="border: 2px solid #00fff7; background-color: #b4b4b4; width: 300px; left: 50px;" onclick="document.getElementById('options-container').style.display='none'; document.getElementById('custom-settings-container').style.display='block';">Custom...</button>
+    </div>
+
+
+    <!--Custom setting container-->
+    <div id="custom-settings-container" style="height: 450px; width: 400px; background-color: #ffffff; position: relative; margin: auto; top: 100px; border-radius: 5px; border: 2px solid black; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+
+        <i class="fa fa-arrow-left" style="position: absolute; font-size: 30px; z-index: 10; left: 10px; top: 15px;" id="back_button" onclick="document.getElementById('custom-settings-container').style.display='none'; document.getElementById('options-container').style.display='block';"></i>
+        <div style="position: relative; text-align: center; height: 60px; width: 100%; font-size: 30px; border-bottom: 4px solid black; background-color: #26752d; top: -0px; border-top-left-radius: 5px; border-top-right-radius: 5px; line-height: 60px; color: #ffffff; font-weight: bold;">Select custom difficulty</div><br>
+
+        <div style="background-color: #ffffff; font-size: 20px; font-weight: bold; width: 100px; z-index: 10; top: 19px; position: relative; left: 5px;" id="mine_slider_number">Mines: 50</div><br><br>
+        <input type="range" min="1" max="200" value="50" class="slider" id="mine_slider" oninput="displayValues('mine');">
+
+        <div style="background-color: #ffffff; font-size: 20px; font-weight: bold; width: 100px; z-index: 10; top: 19px; position: relative; left: 5px;" id="width_slider_number">Width: 50</div><br><br>
+        <input type="range" min="5" max="50" value="50" class="slider" id="width_slider" oninput="displayValues('none');">
+
+        <div style="background-color: #ffffff; font-size: 20px; font-weight: bold; width: 100px; z-index: 10; top: 19px; position: relative; left: 5px;" id="height_slider_number">Height: 50</div><br><br>
+        <input type="range" min="5" max="50" value="50" class="slider" id="height_slider" oninput="displayValues('none');">
+
+
+        <button style="position: absolute; width: 200px; left: 100px; bottom: 30px; height: 50px; font-size: 20px; background-color: #119160; text-align: center; color: #ffffff; font-weight: bold; border-radius: 10px;" onclick="configure_custom_settings();">Generate Board!</button>
+
+</div>
+</div>
+
+<div id="account-settings-container-background" style="background-color: rgba(0,0,0, 0.4); height: 100%; width: 100%; z-index: 10; overflow: auto; position: fixed; top: 0;">
+    <div id="account-panel" style="height: 450px; width: 400px; background-color: #ffffff; position: relative; margin: auto; top: 100px; border-radius: 5px; border: 2px solid black; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+        
+        <div id="option" style="position: relative; text-align: center; height: 60px; width: 100%; font-size: 30px; border-bottom: 4px solid black; background-color: #26752d; top: -0px; border-top-left-radius: 5px; border-top-right-radius: 5px; line-height: 60px; color: #ffffff; font-weight: bold;">Sign Up</div>
+        <br>
+        <!--New account page-->
+        <div id="createNewAccount">
+            <i class="fa fa-times" style="position: absolute; z-index: 1; font-size: 25px; top: 5px; left: 5px;" id="close_button_account" onclick="document.getElementById('account-settings-container-background').style.display='none';"></i>
+            <label style="font-size: 20px; left: 10px; position: relative; font-weight: bold; top: 30px;" for="username">Enter Username:<br>(3-20) characters</label>
+            <input type="text" id="username" style="height: 40px; position: relative; top: 15px; right: -40px; font-size: 20px; width: 180px; border-radius: 15px;" placeholder="Username" maxlength="20">
+            <br>
+            <label style="font-size: 20px; left: 10px; position: relative; font-weight: bold; top: 55px;" for="password">Enter Password:</label>
+            <input type="password" id="password" style="height: 40px; position: relative; top: 55px; right: -40px; font-size: 20px; width: 180px; border-radius: 15px;" placeholder="password">
+            <br>
+            <button id="submitAccountRequestButton" style="width: 300px; height: 50px; position: relative; top: 120px; border-radius: 20px; left: 50px; font-weight: bold; color: #ffffff; text-align: center; font-size: 20px;" onclick="verifyUserID(document.getElementById('username').value, document.getElementById('password').value);">Create account</button>
+            <p style="text-align: center; top: 120px; position: relative; font-size: 20px; color: black; font-weight: bold;" onclick="document.getElementById('createNewAccount').style.display='none'; document.getElementById('option').innerHTML='Login'; document.getElementById('loginToAccount').style.display='block';"><u>Already have an account? Login here!</u></p>
+            <p id="error-msg" style="color: red; position: relative; top: -40px; text-align: center; font-size: 20px;"></p>
+        </div>
+
+
+        <!--Login to account page-->
+        <div id="loginToAccount">
+            <i class="fa fa-arrow-left" style="position: absolute; font-size: 30px; z-index: 10; left: 10px; top: 15px;" id="back_button_account" onclick="document.getElementById('option').innerHTML='Sign up'; document.getElementById('loginToAccount').style.display='none'; document.getElementById('createNewAccount').style.display='block';"></i>
+            <label style="font-size: 20px; left: 10px; position: relative; font-weight: bold; top: 25px;" for="usernameL">Enter Username:</label>
+            <input type="text" id="usernameL" style="height: 40px; position: relative; top: 22px; right: -40px; font-size: 20px; width: 180px; border-radius: 15px;" placeholder="Username" maxlength="20">
+            <br>
+            <label style="font-size: 20px; left: 10px; position: relative; font-weight: bold; top: 55px;" for="passwordL">Enter Password:</label>
+            <input type="password" id="passwordL" style="height: 40px; position: relative; top: 55px; right: -40px; font-size: 20px; width: 180px; border-radius: 15px;" placeholder="password">
+            <br>
+            <button id="submitAccountRequestButton" style="width: 300px; height: 50px; position: relative; top: 160px; border-radius: 20px; left: 50px; font-weight: bold; color: #ffffff; text-align: center; font-size: 20px;" onclick="loginToAccount(document.getElementById('usernameL').value, document.getElementById('passwordL').value);">Login</button>
+            <p id="error-msg-L" style="color: red; position: relative; top: 20px; text-align: center; font-size: 20px;"></p>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="accountSettings.js"></script>
+
+<script>
+
+window.turn_count=0;
+window.totalMineCount=0;
+window.gameMode="none";
+var board=[]
+function generate_any_board(width, height) {
+
+    console.log("Generating a new board");
+    document.getElementById("close_button").style.display="block";
+    document.getElementById("options-container-background").style.display="none";
+    document.getElementById("button_icon").src="images/StartButton_icon.png"
+    //Formatting the matrix resolution(resizing it based on the board dimensions)
+    var matrix_pixel_width=(width*40);
+    var matrix_pixel_height=(height*40)+130;
+    if(matrix_pixel_width<300) {matrix_pixel_width=300;}
+    document.getElementById("matrix").style.width=(matrix_pixel_width).toString()+"px";
+    document.getElementById("matrix").style.height=matrix_pixel_height.toString()+"px";
+    
+    document.getElementById("startButton").style.left=(matrix_pixel_width/2-114).toString()+"px";
+    document.getElementById("mineCount").style.left=(matrix_pixel_width/2-130).toString()+"px";
+    document.getElementById("gameTime").style.right=(matrix_pixel_width/2-120).toString()+"px";
+    document.getElementById("menu").style.left=(matrix_pixel_width/2-340).toString()+"px";
+    document.getElementById("account-menu").style.left=(matrix_pixel_width/2-45).toString()+"px";
+
+    //Destroying existing game boards to avoid overwrite 
+    if(board.length!=0) {
+        square_number=1;
+        var totalButtonCount=row_count*item_count;
+
+        //Destroying all the break tags
+        var brs = matrix.getElementsByTagName('br');
+        while (brs.length) {
+            brs[0].parentNode.removeChild(brs[0]);
+        }
+
+        //Destroying all the buttons
+        for(var num=0; num<totalButtonCount; num++) {
+            
+            var buttonID="button_"+((num+1).toString());
+            var button_element=document.getElementById(buttonID);
+            button_element.remove();
+        }
+        try{clearInterval(interval); } catch(err) {}
+        try{clearInterval(timerCoroutine);} catch(err) {}
+        document.getElementById("gameTime").innerHTML="0.0";
+        gameOver=false;
+        gameStarted=false;
+        gameTimer=0;
+        minesUnflagged=0;
+        first_mine=false;
+        first_mine_index=0;
+        if(turn_count!=1) {
+            turn_count=0;
+        }
+    }
+    board=[];
+
+    for(var i=0; i<height; i++) {
+        var row=[];
+        for(var j=0; j<width; j++) {
+            row.push(0);
+        }
+        board.push(row);
+    }
+    window.row_count=board.length;
+    window.item_count=board[0].length;
+    draw_board();
+    generateBoard();
+    document.getElementById("matrix").style.display="block";
+}
+
+
+
+
+
+
+
+
+function configure_custom_settings() {
+
+
+    var board_width=parseInt(document.getElementById("width_slider").value);
+    var board_height=parseInt(document.getElementById("height_slider").value);
+    var board_mine_count=parseInt(document.getElementById("mine_slider").value);
+
+    //console.log(board_height*board_width, board_mine_count);
+    if(board_height*board_width>board_mine_count) {
+        totalMineCount=board_mine_count;
+        gameMode="Custom";
+        generate_any_board(board_width, board_height);
+    }
+}
+
+
+
+
+
+
+
+
+function displayValues(type) {
+
+    var mine_slider=document.getElementById("mine_slider").value;
+    var width_slider=parseInt(document.getElementById("width_slider").value);
+    var height_slider=parseInt(document.getElementById("height_slider").value);
+
+    if(type!="mine") {
+        mine_slider=Math.ceil((width_slider*height_slider)*0.2063);
+    }
+
+    document.getElementById("mine_slider_number").innerHTML="Mines: "+mine_slider;
+    document.getElementById("mine_slider").max=(width_slider*height_slider)-1;
+
+    document.getElementById("width_slider_number").innerHTML="Width: "+width_slider;
+    document.getElementById("height_slider_number").innerHTML="Height: "+height_slider;
+    document.getElementById("mine_slider").value=mine_slider;
+}
+
+//Intitalising the game board
+
+window.gameStarted=false;
+window.gameOver=false;
+window.gameTimer=0;
+window.timerCoroutine;
+window.minesUnflagged=0;
+
+window.board_colour="#fcefa9";
+window.square_number=1;
+
+window.touchmove=false; //Keeping track of the user swiping on mobile devices
+
+window.flagCooldown=300;
+
+
+
+
+
+function draw_board() {
+
+
+    for(let i=0; i<row_count; i++) {
+
+        for(let j=0; j<item_count; j++){
+
+            var newButton=document.createElement('button');
+            newButton.textContent="I";
+            newButton.style.color=board_colour;
+
+            //Formatiing the button styles
+            newButton.style.borderWidth="1px";
+            newButton.style.height="40px";
+            newButton.style.width="40px";
+            newButton.style.backgroundColor=board_colour;
+            newButton.style.backgroundImage="url('images/Transparent.png')";
+            newButton.style.backgroundSize="37px 37px";
+            newButton.style.touchAction="manipulation";
+
+            newButton.id="button_"+square_number.toString();
+        // document.getElementById(newButton.id).addEventListener("dblclick", console.log(1));
+            matrix.appendChild(newButton);
+            square_number+=1;
+        }
+        matrix.appendChild(document.createElement("br"));
+    }
+    matrix.appendChild(document.createElement("br"));
+    matrix.appendChild(document.createElement("br"));
+
+    var btns=document.getElementById("matrix").querySelectorAll("button");
+
+    window.timer=0;
+    window.interval=undefined;
+    window.click_interval;
+    let button_flagged=false;
+    window.interval_executed=false;
+    window.clickRegistered=false;
+
+
+    for(i of btns) {
+
+        //Adding an event listener to all of the buttons in the matrix
+
+        i.addEventListener("mousedown", function() {
+            console.log(clickRegistered, "Mouse down");
+            if(clickRegistered==false) {
+                
+                turn_count+=1;
+                if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
+
+                timer=new Date().getTime();
+
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                    button_flagged=false;
+                    interval=setInterval(held_click, flagCooldown, buttonID, str1);
+                }
+            }
+        });
+
+
+
+
+
+        i.addEventListener("mouseup", function() {
+
+            
+            try{clearInterval(interval);} catch(err) {};
+            var current_time=new Date().getTime();
+
+
+            /*
+            if(current_time-timer>1000) {
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                    var numberOfButton=parseInt(str1[1]);
+                    flagControl(numberOfButton);
+                    button_flagged=true;
+                }
+            }
+            */
+            if(current_time-timer<flagCooldown) {
+
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID) {
+
+                    var numberOfButton=parseInt(str1[1]);
+
+                    var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
+                    var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
+                    
+                    if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
+                        
+                        reveal_squares(numberOfButton); 
+                    }
+                    else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
+                        
+                        reveal_any_square(buttonID, row_index, item_index_in_row);
+                    }
+                }        
+            }
+        });
+
+        
+
+        i.addEventListener("touchmove", function(event) {
+            touchmove=true; console.log("touchmove");  
+        });
+
+        let firstTouch=false;
+        window.click_interval_over=true;
+
+
+
+        i.addEventListener("touchstart", function(event) {
+
+            clickRegistered=true;
+            console.log(clickRegistered, "touch start");
+
+            if(touchmove==false && firstTouch==false && click_interval_over==true) {
+
+                firstTouch=true;
+                click_interval_over=false;
+
+                click_interval=setInterval(function() {click_interval_over=true;}, 200);
+
+                turn_count+=1;
+                if(gameStarted==false && click_interval_over==true) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
+
+                timer=new Date().getTime();
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                
+                if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && interval_executed==false) {
+                    button_flagged=true;
+                    interval_executed=true;
+                    interval=setInterval(held_click, flagCooldown, buttonID, str1);
+                }
+            }
+            touchmove=false;
+        });
+
+
+
+
+        i.addEventListener("touchend", function(event) {
+            
+            //clickRegistered=false;
+            interval_executed=false;
+            firstTouch=false;
+            clearInterval(interval);
+            var current_time=new Date().getTime();
+
+        
+            
+            if(current_time-timer>1000) {
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)") {
+                    var numberOfButton=parseInt(str1[1]);
+                    flagControl(numberOfButton);
+                    button_flagged=true;
+                }
+            }
+            
+          
+            if(current_time-timer<(flagCooldown) && touchmove!=true) {
+
+                var buttonID=this.id;
+                var str1=buttonID.split("_");
+
+                if(str1!=buttonID) {
+
+                    var numberOfButton=parseInt(str1[1]);
+                    var row_index=(Math.ceil(((numberOfButton)/item_count)))-1//Retrieving the index of the row
+                    var item_index_in_row=(numberOfButton)-(item_count*row_index)-1//Retrieving the index of the button in the row
+                
+                    if(board[row_index][item_index_in_row]==0 && document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false && document.getElementById(buttonID).style.backgroundImage!='url("images/Flag.png")') {
+                        
+                        reveal_squares(numberOfButton); 
+                        console.log("reveal_any_square_0");
+                    }
+                    else if(document.getElementById(buttonID).style.backgroundColor=="rgb(252, 239, 169)" && gameOver==false) {
+                        
+                        reveal_any_square(buttonID, row_index, item_index_in_row);
+                        console.log("reveal_any_square");
+                    }
+                }        
+            }
+            touchmove=false;
+        });
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+function held_click(buttonID, str1) {
+
+    var numberOfButton=parseInt(str1[1]);
+    flagControl(numberOfButton);
+    try{clearInterval(interval);} catch(err) {}
+}
+
+
+
+
+
+function flagControl(button) {
+    console.log(button);
+
+    if(gameOver==false && touchmove==false) {
+        button_flagged=true;
+        var row_index=(Math.ceil(((button)/item_count)))-1//Retrieving the index of the row
+        var item_index_in_row=(button)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+        button_ref=document.getElementById("button_"+button.toString()).style;
+
+        if(button_ref.backgroundImage=='url("images/Transparent.png")') {button_ref.backgroundImage='url("images/Flag.png")'; button_ref.color='rgba(0, 0, 0, 0)'; minesUnflagged-=1;}
+        else if(button_ref.backgroundImage=='url("images/Flag.png")') {button_ref.backgroundImage='url("images/Transparent.png")'; console.log("unflagged");button_ref.color=board_colour; minesUnflagged+=1;}
+        document.getElementById("mineCount").innerHTML=minesUnflagged.toString();
+    }
+    interval_executed=false;
+}
+
+
+
+
+
+
+
+
+
+
+
+function startTimer() {
+
+    gameTimer+=0.1;
+    gameTimer=Math.round(gameTimer*10)/10;
+    var gameTimer_str=gameTimer.toString();
+    //Ensuring that whole numbers are written as 5.0 instead of 5
+    if(gameTimer%1==0) {
+        gameTimer_str=gameTimer_str+".0";
+    }
+    if(document.getElementById("gameTime").style.width!="70px" && gameTimer>9.9 && gameTimer<99.9) {
+        document.getElementById("gameTime").style.width="70px";
+    }
+    else if(document.getElementById("gameTime").style.width!="90px" && gameTimer>99.9 && gameTimer<999.9) {
+        document.getElementById("gameTime").style.width="90px";
+    }
+    else if(document.getElementById("gameTime").style.width!="105px" && gameTimer>999.9) {
+        document.getElementById("gameTime").style.width="105px";
+    }
+
+    document.getElementById("gameTime").innerHTML=gameTimer_str;
+}
+
+
+
+
+
+
+
+/*
+0,0,M,0,0,0,M,0,0,0,0,0,0,M,0,0,M,0,
+0,0,0,0,M,0,M,0,M,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,M,M,0,0,0,0,0,0,0,0,0,0,0,
+M,M,0,0,M,0,0,0,M,0,M,0,0,M,0,M,0,0,
+M,0,M,0,0,M,0,0,0,0,0,0,0,M,0,0,M,0,
+M,0,0,0,0,0,0,0,0,0,0,0,0,M,0,0,0,0,
+0,0,M,0,0,M,0,0,M,0,0,0,0,0,0,M,0,0,
+0,0,0,M,M,0,M,0,0,M,M,0,0,0,0,M,0,0,
+0,0,0,M,0,0,0,0,0,0,0,0,0,M,0,0,M,0,
+0,0,0,0,0,M,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,M,0,0,0,M,0,0,M,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,M,0,0,0,0,0,
+M,M,0,M,M,0,M,0,0,0,M,0,M,0,0,0,0,0,
+0,M,0,0,0,0,0,M,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,M,0,
+M,0,0,0,0,M,0,M,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,M,0,0,0,M,0,0,0,0,M,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+*/
+
+
+function generateBoard() {
+
+
+    //Generating the mines
+    if(gameMode!="Custom") {
+        var number_of_squares=row_count*item_count;//Calculating total squares on the board
+        var mine_number=(row_count*item_count)*0.2063//Determining the number of mines to be placed on the board - original mine count for 18 by 18 board: 40
+        mine_number=Math.ceil(mine_number);
+        totalMineCount=mine_number;
+    }
+    minesUnflagged=totalMineCount;
+
+    document.getElementById("mineCount").innerHTML=minesUnflagged.toString();
+    //Ensuring that a mine isn't placed on the player's first turn 
+    var row=undefined;
+    var item=undefined;
+
+    try{row=mine_on_1st_turn[0];} catch(err) {}
+    try{item=mine_on_1st_turn[1];} catch(err) {}
+
+
+    for(let i=0; i<totalMineCount; i++) {
+
+        var random_row=Math.floor(Math.random()*(row_count));
+        var random_item_index_in_row=Math.floor(Math.random()*(item_count));
+
+        //Ensuring that the mine isn't placed in the same place twice
+        while(board[random_row][random_item_index_in_row]=="M") {
+            random_row=Math.floor(Math.random()*(row_count));
+            random_item_index_in_row=Math.floor(Math.random()*(item_count));
+        }
+
+        //Ensuring that the mine isnt placed on the player's first turn
+        if(item!=undefined && row!=undefined) {
+
+            while(random_row==row && random_item_index_in_row==item || board[random_row][random_item_index_in_row]=="M") {
+                random_row=Math.floor(Math.random()*(row_count));
+                random_item_index_in_row=Math.floor(Math.random()*(item_count)); 
+            }
+        }
+
+        board[random_row][random_item_index_in_row]="M";
+    }
+
+
+    //Counting all the mines
+    for(var row=0; row<row_count; row++) {
+        for(var item=0; item<item_count; item++) {
+            if(board[row][item]!="M") {
+                var mine_count=0;
+                try{if(board[row-1][item-1]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row-1][item]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row-1][item+1]=="M") {mine_count+=1;}} catch(err) {}
+
+                try{if(board[row][item-1]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row][item+1]=="M") {mine_count+=1;}} catch(err) {}
+
+                try{if(board[row+1][item-1]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row+1][item]=="M") {mine_count+=1;}} catch(err) {}
+                try{if(board[row+1][item+1]=="M") {mine_count+=1;}} catch(err) {}
+
+                board[row][item]=mine_count;
+            }
+        }
+    }
+    
+    renderGameBoard();
+}
+
+
+
+
+
+
+
+
+
+//Algorithm designed to check for duplicate squares
+function check_for_duplicate_square(squares_already_iterated, square_index) {
+
+    var duplicate_square=false;
+    for(i of squares_already_iterated) {
+        if(i==square_index) {
+            duplicate_square=true;
+            break;
+        }
+    }
+    return duplicate_square;
+}
+
+
+
+
+
+
+
+//Algorithm to reveal all adjacent squares next to 0s - This is done using recursive revealing
+function reveal_squares(buttonNumber) {
+
+    var row_index=(Math.ceil(((buttonNumber)/item_count)))-1//Retrieving the index of the row
+    var item_index_in_row=(buttonNumber)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+    var total_squares_with_0=[];
+    var current_proximity_squares=[[row_index, item_index_in_row]];
+    
+    for(let i of current_proximity_squares) {
+
+        row_index=i[0];
+        item_index_in_row=i[1];
+
+        try{if(board[row_index-1][item_index_in_row-1]==0 && item_in_array([row_index-1, item_index_in_row-1], total_squares_with_0)==false){total_squares_with_0.push([row_index-1, item_index_in_row-1]); current_proximity_squares.push([row_index-1, item_index_in_row-1]);}} catch(err) {}
+        try{if(board[row_index-1][item_index_in_row]==0 && item_in_array([row_index-1, item_index_in_row], total_squares_with_0)==false) {total_squares_with_0.push([row_index-1, item_index_in_row]); current_proximity_squares.push([row_index-1, item_index_in_row]);}} catch(err) {}
+        try{if(board[row_index-1][item_index_in_row+1]==0 && item_in_array([row_index-1, item_index_in_row+1], total_squares_with_0)==false) {total_squares_with_0.push([row_index-1, item_index_in_row+1]); current_proximity_squares.push([row_index-1, item_index_in_row+1]);}} catch(err) {}
+
+        try{if(board[row_index][item_index_in_row-1]==0 && item_in_array([row_index, item_index_in_row-1], total_squares_with_0)==false) {total_squares_with_0.push([row_index, item_index_in_row-1]); current_proximity_squares.push([row_index, item_index_in_row-1]);}} catch(err) {}
+        try{if(board[row_index][item_index_in_row+1]==0 && item_in_array([row_index, item_index_in_row+1], total_squares_with_0)==false) {total_squares_with_0.push([row_index, item_index_in_row+1]); current_proximity_squares.push([row_index, item_index_in_row+1]);}} catch(err) {}
+
+        try{if(board[row_index+1][item_index_in_row-1]==0 && item_in_array([row_index+1, item_index_in_row-1], total_squares_with_0)==false) {total_squares_with_0.push([row_index+1, item_index_in_row-1]); current_proximity_squares.push([row_index+1, item_index_in_row-1]);}} catch(err) {}
+        try{if(board[row_index+1][item_index_in_row]==0 && item_in_array([row_index+1, item_index_in_row], total_squares_with_0)==false) {total_squares_with_0.push([row_index+1, item_index_in_row]); current_proximity_squares.push([row_index+1, item_index_in_row]);}} catch(err) {}
+        try{if(board[row_index+1][item_index_in_row+1]==0 && item_in_array([row_index+1, item_index_in_row+1], total_squares_with_0)==false) {total_squares_with_0.push([row_index+1, item_index_in_row+1]); current_proximity_squares.push([row_index+1, item_index_in_row+1]);}} catch(err) {}
+ 
+        delete current_proximity_squares[0];
+
+    }
+
+    if(total_squares_with_0.length==0) {total_squares_with_0.push([row_index, item_index_in_row]);}
+    updateGameBoard(total_squares_with_0);
+}
+
+
+
+
+
+
+function item_in_array(elem, arr) {
+    for(let i of arr) {
+        if(elem[0]==i[0] && elem[1]==i[1]) {
+            return true;
+            break;
+        }
+    }
+    return false;
+}
+
+
+
+
+
+
+
+
+
+function renderGameBoard() {
+
+    count=1
+    for(row of board) {
+
+        for(item of row) {
+
+            button_ID="button_"+count.toString();
+
+            document.getElementById(button_ID).textContent=item;
+            //document.getElementById(button_ID).style.color="black";
+            document.getElementById(button_ID).style.fontSize="20px";
+            count+=1;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+function updateGameBoard(array) {
+
+    //Revealing all the squares with 0
+    for(var square of array) {
+
+        var row=square[0];
+        var item=square[1];
+
+        if(row<row_count && item<item_count) {
+            var button_number=item_count*row+(item+1);
+    
+            var button_ID="button_"+button_number.toString();
+            if(document.getElementById(button_ID).style.backgroundImage=='url("images/Flag.png")') {minesUnflagged+=1;}
+
+            document.getElementById(button_ID).style.backgroundImage='url("images/Transparent.png")';
+            document.getElementById(button_ID).style.backgroundColor="#deeaee";
+            document.getElementById(button_ID).style.color="#deeaee";
+        }
+    }   
+
+
+    //Revealing everything else in proximity to the 0
+    var proximity_squares=[];
+
+    for(var square of array) {
+
+        var row=square[0];
+        var item=square[1];
+
+        
+        try{if(item_in_array([row-1, item-1], array)==false && row-1>=0 && item-1>=0 && row-1<row_count && item-1<item_count && item_in_array([row-1, item-1], proximity_squares)==false) {proximity_squares.push([row-1, item-1]);}} catch(err) {}
+        try{if(item_in_array([row-1, item], array)==false && row-1>=0 && item>=0 && row-1<row_count && item<item_count && item_in_array([row-1, item], proximity_squares)==false) {proximity_squares.push([row-1, item]);}} catch(err) {}
+        try{if(item_in_array([row-1, item+1], array)==false && row-1>=0 && item+1>=0 && row-1<row_count && item+1<item_count && item_in_array([row-1, item+1], proximity_squares)==false) {proximity_squares.push([row-1, item+1]);}} catch(err) {}
+
+        try{if(item_in_array([row, item-1], array)==false && row>=0 && item-1>=0 && row<row_count && item-1<item_count && item_in_array([row, item-1], proximity_squares)==false) {proximity_squares.push([row, item-1]);}} catch(err) {}
+        try{if(item_in_array([row, item+1], array)==false && row>=0 && item+1>=0 && row<row_count && item+1<item_count && item_in_array([row, item+1], proximity_squares)==false) {proximity_squares.push([row, item+1]);}} catch(err) {}
+
+        try{if(item_in_array([row+1, item-1], array)==false && row+1>=0 && item-1>=0 && row+1<row_count && item-1<item_count && item_in_array([row+1, item-1], proximity_squares)==false) {proximity_squares.push([row+1, item-1]);}} catch(err) {}
+        try{if(item_in_array([row+1, item], array)==false && row+1>=0 && item>=0 && row+1<row_count && item<item_count && item_in_array([row+1, item], proximity_squares)==false) {proximity_squares.push([row+1, item]);}} catch(err) {}
+        try{if(item_in_array([row+1, item+1], array)==false && row+1>=0 && item+1>=0 && row+1<row_count && item+1<item_count && item_in_array([row+1, item+1], proximity_squares)==false) {proximity_squares.push([row+1, item+1]);}} catch(err) {}
+    
+    }
+
+    //console.log(proximity_squares);
+
+
+    for(var square of proximity_squares) {
+        
+        var row=square[0];
+        var item=square[1];
+        var button_number=item_count*row+(item+1);
+
+        var button_ID="button_"+button_number.toString();
+        reveal_any_square(button_ID, row, item);
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.first_mine=false;
+window.first_mine_index=0;
+window.mine_on_1st_turn=[];
+function reveal_any_square(button_ID, row, item) {
+    
+
+    if(document.getElementById(button_ID).style.backgroundImage!='url("images/Flag.png")') {
+
+        document.getElementById(button_ID).style.backgroundColor="#deeaee";
+        document.getElementById(button_ID).style.fontWeight="bold";
+            
+        if(board[row][item]=="0") {document.getElementById(button_ID).style.color="#deeaee";}
+        else if(board[row][item]=="1") {document.getElementById(button_ID).style.color="#0274FF";}
+        else if(board[row][item]=="2") {document.getElementById(button_ID).style.color="#4BD665";}
+        else if(board[row][item]=="3") {document.getElementById(button_ID).style.color="#FF0000";}
+        else if(board[row][item]=="4") {document.getElementById(button_ID).style.color="#0208A1";}
+        else if(board[row][item]=="5") {document.getElementById(button_ID).style.color="#930202";}
+        else if(board[row][item]=="6") {document.getElementById(button_ID).style.color="#48BDC7";}
+        else if(board[row][item]=="7") {document.getElementById(button_ID).style.color="#000000";}
+        else if(board[row][item]=="8") {document.getElementById(button_ID).style.color="#8F8F8F";}
+        else if(board[row][item]=="M") {
+            if(turn_count==1) {
+                if(board[row][item]=="M") {
+                    console.log("Mine on first click");
+                    var board_width=parseInt(document.getElementById("width_slider").value);
+                    var board_height=parseInt(document.getElementById("height_slider").value);
+                    mine_on_1st_turn=[row, item];
+                    generate_any_board(item_count, row_count);
+
+                    
+                    var button_number=item_count*row+(item+1);
+                    var button_ID="button_"+button_number.toString();
+                    if(board[row][item]=="0") {
+                        reveal_squares(button_number)
+                    }
+                    else{reveal_any_square(button_ID, row, item);}
+
+                    clearInterval(timerCoroutine);
+                    //console.log(button_number, button_ID);
+                    //console.log("YAY!");
+                }
+
+                //if(gameStarted==false) {gameStarted=true; timerCoroutine=setInterval(startTimer, 100);}
+            }
+            else{
+                if(first_mine==false) {first_mine_index=button_ID; first_mine=true; check_for_mistakes();}
+                else if(first_mine_index==button_ID) {document.getElementById(button_ID).style.backgroundColor="red"; document.getElementById("button_icon").src="images/GameOver_icon.png"; try{clearInterval(timerCoroutine);} catch(err) {}}
+
+                document.getElementById(button_ID).style.backgroundImage='url("images/Mine.png")'; 
+                document.getElementById(button_ID).style.color="rgba(0, 0, 0, 0)";
+                if(gameOver==false) {end_game();}
+                }
+            }
+        }
+
+    if(gameOver==false) {
+        check_for_winner();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function end_game() {
+
+    //Retrieving all the mines
+    gameOver=true;
+
+    var mine_coords=[];
+    var item=0;
+
+    for(var row=0; row<row_count; row++ ) {
+        for(var j of board[row]) {
+            if(j=="M") {
+                mine_coords.push([row, item]);
+            }
+            item+=1;
+        }
+        item=0;
+    }
+
+    for(var mine of mine_coords) {
+
+        var row=mine[0];
+        var item=mine[1];
+
+        var button_number=item_count*row+(item+1);
+        var button_ID="button_"+button_number.toString();
+
+        reveal_any_square(button_ID, row, item);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+function check_for_winner() {
+
+    var current_mine_count=0;
+    for(var i=0; i<(row_count*item_count); i++) {
+
+        var button_ID="button_"+(i+1).toString();
+
+        if(document.getElementById(button_ID).style.backgroundColor=="rgb(252, 239, 169)") {
+            current_mine_count+=1;
+        }
+    }
+
+    if(current_mine_count==totalMineCount) {
+
+        gameOver=true;
+        document.getElementById("button_icon").src="images/GameWon_icon.png";
+        clearInterval(timerCoroutine);
+
+        //Flagging all the unflagged mines
+        for(var i=0; i<(row_count*item_count); i++) {
+
+            var button_ID="button_"+(i+1).toString();
+            var row_index=(Math.ceil(((i+1)/item_count)))-1//Retrieving the index of the row
+            var item_index_in_row=(i+1)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+            if(document.getElementById(button_ID).style.backgroundColor=="rgb(252, 239, 169)" && board[row_index][item_index_in_row]=="M") {
+
+                document.getElementById(button_ID).style.color="rgb(0,0,0,0)";
+                document.getElementById(button_ID).style.backgroundImage='url("images/Flag.png")';
+            }
+        }
+    }
+}
+
+
+
+function check_for_mistakes() {
+
+    for(var i=0; i<(row_count*item_count); i++) {
+
+        var button_ID="button_"+(i+1).toString();
+
+        var row_index=(Math.ceil(((i+1)/item_count)))-1//Retrieving the index of the row
+        var item_index_in_row=(i+1)-(item_count*row_index)-1//Retrieving the index of the button in the row
+
+        //Checking for mistakes
+        if(document.getElementById(button_ID).style.backgroundImage=='url("images/Flag.png")' && board[row_index][item_index_in_row]!="M") {
+            document.getElementById(button_ID).style.backgroundImage='url("images/Invalid-Flag.png")';
+        }
+    }
+
+
+}
+
+
+
+function reset_game() {
+
+    //Resetting game board
+    board=[];
+    var button_count=0;
+    for(var i=0; i<row_count; i++) {
+        var row=[];
+        for(var j=0; j<item_count; j++) {
+            row.push(0);
+            button_count+=1;
+
+            var buttonID="button_"+button_count.toString()
+            document.getElementById(buttonID).innerHTML="I";
+            document.getElementById(buttonID).style.color=board_colour;
+            document.getElementById(buttonID).style.backgroundColor=board_colour;
+            document.getElementById(buttonID).style.backgroundImage="url(images/Transparent.png)";
+        }
+        board.push(row);
+
+    }
+    
+    //Resetting variables
+    gameStarted=false;
+    gameOver=false;
+    if(gameMode!="Custom") {
+        totalMineCount=0;
+    }
+    gameTimer=0;
+    minesUnflagged=0;
+    
+    first_mine=false;
+    first_mine_index=0;
+    turn_count=0;
+    mine_on_1st_turn=[];
+
+    //Resetting the timer and minecount
+    document.getElementById("mineCount").innerHTML="âˆž";
+    document.getElementById("gameTime").innerHTML="0.0";
+    document.getElementById("gameTime").style.width="60px";
+    document.getElementById("button_icon").src="images/StartButton_icon.png";
+    clearInterval(timerCoroutine);
+
+    //Generating the game board
+    generateBoard();
+    
+}
+
+
+
+</script>
+
+</body>
+</html>
