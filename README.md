@@ -3,7 +3,8 @@ A fun minesweeper game that allows you to customize board size and mine count
 Link to game
 https://minemania.azurewebsites.net/
 
-DISCLAIMER: may not function correctly on Safari
+DISCLAIMER: 
+May not function correctly on Safari <br>
 The code included in this repo isn't the source code and is an incredibly old version of the actual project with missing parts.
 
 ---
