@@ -4,6 +4,7 @@ Link to game
 https://minemania.azurewebsites.net/
 
 DISCLAIMER: may not function correctly on Safari
+The code included in this repo isn't the source code and is an incredibly old version of the actual project with missing parts.
 
 ---
 
